@@ -58,8 +58,8 @@
 	</build>
 
 	<scm>
-		<connection>scm:git:file:///var/git/projects/cmayes-practice.git</connection>
-		<url>scm:git:file:///var/git/projects/cmayes-practice.git</url>
+		<connection>scm:git:file:///var/git/projects/cmayes-common.git</connection>
+		<url>scm:git:file:///var/git/projects/cmayes-common.git</url>
 	</scm>
 
 	<distributionManagement>
