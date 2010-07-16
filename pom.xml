@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.cmayes</groupId>
 	<artifactId>cmayes-common</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1.0-SNAPSHOT</version>
 	<name>cmayes common classes</name>
 	<description>Common classes for Chris Mayes's projects</description>
 
@@ -57,4 +57,27 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<scm>
+		<connection>scm:git:file:///var/git/projects/cmayes-practice.git</connection>
+		<url>scm:git:file:///var/git/projects/cmayes-practice.git</url>
+	</scm>
+
+	<distributionManagement>
+		<repository>
+			<id>localRelease</id>
+			<name>Local Release</name>
+			<url>file:///srv/maven/release</url>
+		</repository>
+		<snapshotRepository>
+			<id>localSnapshot</id>
+			<name>Local Snapshot</name>
+			<url>file:///srv/maven/snapshot</url>
+		</snapshotRepository>
+		<site>
+			<id>localSite</id>
+			<name>Mojo Website</name>
+			<url>file:///srv/maven/site/spring3</url>
+		</site>
+	</distributionManagement>
 </project>
