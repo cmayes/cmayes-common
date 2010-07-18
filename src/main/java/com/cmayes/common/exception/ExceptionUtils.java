@@ -125,7 +125,7 @@ public final class ExceptionUtils {
      *             When anything is null.
      */
     public static <E> Collection<E> asNotNullCollection(
-            Collection<E> collection, String errMess) {
+            final Collection<E> collection, final String errMess) {
         checkNullArg(collection, errMess);
         for (E element : collection) {
             checkNullArg(element, errMess);
