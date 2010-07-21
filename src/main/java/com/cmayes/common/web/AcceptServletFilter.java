@@ -1,9 +1,11 @@
 package com.cmayes.common.web;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Vector;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -33,7 +35,7 @@ public class AcceptServletFilter implements Filter {
     /** Logger. */
     private final Logger logger = LoggerFactory.getLogger(getClass());
     /** Holds a map of extensions to MIME types. */
-    private HashMap<String, String> map = new HashMap<String, String>();
+    private Map<String, String> map = new HashMap<String, String>();
 
     /**
      * Reads the mappings defined in the webapp's web.xml. Note that the
@@ -93,7 +95,7 @@ public class AcceptServletFilter implements Filter {
         final String uri = srvRequest.getRequestURI();
         final String extension = getExtension(uri);
         final String type = map.get(extension);
-        final Vector<String> values = new Vector<String>();
+        final List<String> values = new ArrayList<String>();
         if (type != null) {
             values.add(type);
         } else {
@@ -136,7 +138,7 @@ public class AcceptServletFilter implements Filter {
         /** Logger. */
         private final Logger logger = LoggerFactory.getLogger(getClass());
         /** The <code>accept</code> header values. */
-        private final Vector<String> accept;
+        private final List<String> accept;
         /** The extension for the accept header (if any). */
         private final String acceptExtension;
 
@@ -152,7 +154,7 @@ public class AcceptServletFilter implements Filter {
          *            The values for the <code>accept</code> header.
          */
         public Wrapper(final HttpServletRequest request,
-                final String extension, final Vector<String> theMime) {
+                final String extension, final List<String> theMime) {
             super(request);
             accept = theMime;
             acceptExtension = extension;
@@ -205,7 +207,7 @@ public class AcceptServletFilter implements Filter {
         @SuppressWarnings("unchecked")
         public Enumeration<String> getHeaders(final String name) {
             if (ACCEPT_KEY.equals(name)) {
-                return accept.elements();
+                return java.util.Collections.enumeration(accept);
             }
             return super.getHeaders(name);
         }
@@ -251,7 +253,7 @@ public class AcceptServletFilter implements Filter {
             }
             final String extension = path.substring(index);
 
-            System.out.println("searching for: " + extension);
+            logger.debug("searching for: " + extension);
             if (acceptExtension.equals(extension)) {
                 return path.substring(0, path.length() - extension.length());
             }
