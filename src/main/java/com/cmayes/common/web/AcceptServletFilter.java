@@ -35,7 +35,7 @@ public class AcceptServletFilter implements Filter {
     /** Logger. */
     private final Logger logger = LoggerFactory.getLogger(getClass());
     /** Holds a map of extensions to MIME types. */
-    private Map<String, String> map = new HashMap<String, String>();
+    private final Map<String, String> map = new HashMap<String, String>();
 
     /**
      * Reads the mappings defined in the webapp's web.xml. Note that the
@@ -96,14 +96,14 @@ public class AcceptServletFilter implements Filter {
         final String extension = getExtension(uri);
         final String type = map.get(extension);
         final List<String> values = new ArrayList<String>();
-        if (type != null) {
-            values.add(type);
-        } else {
+        if (type == null) {
             final Enumeration<String> headers = srvRequest
                     .getHeaders(ACCEPT_KEY);
             while (headers.hasMoreElements()) {
                 values.add(headers.nextElement());
             }
+        } else {
+            values.add(type);
         }
         chain.doFilter(new Wrapper(srvRequest, extension, values), response);
     }
@@ -226,10 +226,10 @@ public class AcceptServletFilter implements Filter {
         @Override
         public String getHeader(final String name) {
             if (ACCEPT_KEY.equalsIgnoreCase(name)) {
-                if (accept.size() > 0) {
-                    return accept.get(0);
-                } else {
+                if (accept.isEmpty()) {
                     return null;
+                } else {
+                    return accept.get(0);
                 }
             }
             return super.getHeader(name);
