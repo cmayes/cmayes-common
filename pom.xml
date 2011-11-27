@@ -68,8 +68,8 @@
 	</build>
 
 	<scm>
-		<connection>scm:git:file:///var/git/projects/cmayes-common.git</connection>
-		<url>scm:git:file:///var/git/projects/cmayes-common.git</url>
+		<connection>scm:git:ssh://git@10.1.0.4:cmayes-common</connection>
+		<url>scm:git:ssh://git@10.1.0.4:cmayes-common</url>
 	</scm>
 
 	<distributionManagement>
