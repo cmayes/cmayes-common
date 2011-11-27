@@ -44,7 +44,6 @@
 	</dependencies>
 
 	<build>
-		<finalName>spring3</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -74,20 +73,15 @@
 	</scm>
 
 	<distributionManagement>
-		<repository>
-			<id>localRelease</id>
-			<name>Local Release</name>
-			<url>file:///srv/maven/release</url>
-		</repository>
-		<snapshotRepository>
-			<id>localSnapshot</id>
-			<name>Local Snapshot</name>
-			<url>file:///srv/maven/snapshot</url>
-		</snapshotRepository>
-		<site>
-			<id>localSite</id>
-			<name>Mojo Website</name>
-			<url>file:///srv/maven/site/cmayes-common</url>
-		</site>
+    <repository>
+      <id>archiva.internal</id>
+      <name>Internal Release Repository</name>
+      <url>http://localhost:8181/archiva/repository/internal/</url>
+    </repository>
+    <snapshotRepository>
+      <id>archiva.snapshots</id>
+      <name>Internal Snapshot Repository</name>
+      <url>http://localhost:8181/archiva/repository/snapshots/</url>
+    </snapshotRepository>
 	</distributionManagement>
 </project>
