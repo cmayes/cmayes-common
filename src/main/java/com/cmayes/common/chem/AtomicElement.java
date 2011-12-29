@@ -1,4 +1,4 @@
-package com.cmayes.common;
+package com.cmayes.common.chem;
 
 /**
  * Represents atomic elements, providing the elements' chemical symbol, atomic

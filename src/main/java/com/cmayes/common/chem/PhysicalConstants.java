@@ -1,4 +1,4 @@
-package com.cmayes.common;
+package com.cmayes.common.chem;
 
 /**
  * Physical constants for use in calculations.
