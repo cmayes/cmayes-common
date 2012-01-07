@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.cmayes</groupId>
 	<artifactId>cmayes-common</artifactId>
-	<version>0.1.10-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<name>cmayes common classes</name>
 	<description>Common classes for Chris Mayes's projects</description>
 
