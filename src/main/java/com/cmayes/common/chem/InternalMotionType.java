@@ -29,7 +29,7 @@ public enum InternalMotionType {
      *            The one-letter symbol to look up.
      * @return The element matching the given symbol.
      * @throws IllegalArgumentException
-     *             If not elements match the given symbol.
+     *             If no elements match the given symbol.
      */
     public static InternalMotionType valueOfSymbol(final String sym) {
         for (InternalMotionType val : InternalMotionType.values()) {
