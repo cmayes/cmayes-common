@@ -23,13 +23,13 @@ public enum InternalMotionType {
     }
 
     /**
-     * Look up an element by single-letter symbol.
+     * Look up a type by single-letter symbol.
      * 
      * @param sym
      *            The one-letter symbol to look up.
-     * @return The element matching the given symbol.
+     * @return The type matching the given symbol.
      * @throws IllegalArgumentException
-     *             If no elements match the given symbol.
+     *             If no types match the given symbol.
      */
     public static InternalMotionType valueOfSymbol(final String sym) {
         for (InternalMotionType val : InternalMotionType.values()) {
