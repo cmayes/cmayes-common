@@ -69,8 +69,8 @@
 	</build>
 
 	<scm>
-		<connection>scm:git:/home/cmayes/Dropbox/team/code/git/cmayes-common.git:cmayes-common</connection>
-		<url>scm:git:/home/cmayes/Dropbox/team/code/git/cmayes-common.git:cmayes-common</url>
+		<connection>scm:git:file://localhost/home/cmayes/Dropbox/team/code/git/cmayes-common.git:cmayes-common</connection>
+		<url>scm:git:file://localhost/home/cmayes/Dropbox/team/code/git/cmayes-common.git:cmayes-common</url>
 	</scm>
 
 	<distributionManagement>
