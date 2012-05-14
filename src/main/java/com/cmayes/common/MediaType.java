@@ -10,7 +10,8 @@ import java.util.List;
  * @author cmayes
  */
 public enum MediaType {
-    TEXT("text/plain", "Plain text", Arrays.asList("txt"));
+    TEXT("text/plain", "Plain text", Arrays.asList("txt")), CSV("text/csv",
+            "Comma-separated values", Arrays.asList("csv"));
 
     private final String mimeType;
     private final String description;

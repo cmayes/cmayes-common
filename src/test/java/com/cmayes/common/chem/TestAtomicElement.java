@@ -1,6 +1,5 @@
 package com.cmayes.common.chem;
 
-import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
