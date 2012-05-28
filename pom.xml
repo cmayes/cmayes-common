@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.cmayes</groupId>
 	<artifactId>cmayes-common</artifactId>
@@ -68,9 +69,14 @@
 		</plugins>
 	</build>
 
+	<!-- <scm> -->
+	<!-- <connection>scm:git:file://localhost/home/cmayes/Dropbox/team/code/git/cmayes-common.git</connection> -->
+	<!-- <url>scm:git:file://localhost/home/cmayes/Dropbox/team/code/git/cmayes-common.git</url> -->
+	<!-- </scm> -->
 	<scm>
-		<connection>scm:git:file://localhost/home/cmayes/Dropbox/team/code/git/cmayes-common.git</connection>
-		<url>scm:git:file://localhost/home/cmayes/Dropbox/team/code/git/cmayes-common.git</url>
+		<connection>scm:git:git@github.com:cmayes/cmayes-common.git</connection>
+		<url>scm:git:git@github.com:cmayes/cmayes-common.git</url>
+		<developerConnection>scm:git:git@github.com:cmayes/cmayes-common.git</developerConnection>
 	</scm>
 
 	<distributionManagement>

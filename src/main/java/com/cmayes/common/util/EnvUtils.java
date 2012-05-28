@@ -63,8 +63,8 @@ public final class EnvUtils {
      *            The resource to fetch.
      * @return A handle for the resource or null if the resource is not found.
      */
-    public static String getResourceAsString(String aResName) {
-        Reader resourceReader = getResourceReader(aResName);
+    public static String getResourceAsString(final String aResName) {
+        final Reader resourceReader = getResourceReader(aResName);
         if (resourceReader == null) {
             return null;
         }
@@ -78,8 +78,8 @@ public final class EnvUtils {
      *            The resource to fetch.
      * @return A handle for the resource or null if the resource is not found.
      */
-    public static Reader getResourceReader(String aResName) {
-        InputStream resource = getResource(aResName);
+    public static Reader getResourceReader(final String aResName) {
+        final InputStream resource = getResource(aResName);
         if (resource == null) {
             return null;
         }
@@ -93,8 +93,9 @@ public final class EnvUtils {
      *            The resource to fetch.
      * @return A handle for the resource or null if the resource is not found.
      */
-    public static InputStream getResource(String aResName) {
-        return EnvUtils.class.getClassLoader().getResourceAsStream(aResName);
+    public static InputStream getResource(final String aResName) {
+        return Thread.currentThread().getContextClassLoader()
+                .getResourceAsStream(aResName);
     }
 
     /**
@@ -104,7 +105,7 @@ public final class EnvUtils {
      *            The data to process.
      * @return The processed data as a String.
      */
-    public static String getStringFromReader(Reader aData) {
+    public static String getStringFromReader(final Reader aData) {
         return getStringFromReader(aData, true);
     }
 
@@ -117,10 +118,11 @@ public final class EnvUtils {
      *            Whether to add newlines at the end of each line in the file.
      * @return The processed data as a String.
      */
-    public static String getStringFromReader(Reader aData, boolean isAddNewlines) {
+    public static String getStringFromReader(final Reader aData,
+            final boolean isAddNewlines) {
         String thisLine;
-        StringBuffer buf = new StringBuffer();
-        BufferedReader br = new BufferedReader(aData);
+        final StringBuffer buf = new StringBuffer();
+        final BufferedReader br = new BufferedReader(aData);
         try {
             while ((thisLine = br.readLine()) != null) {
                 buf.append(thisLine);
@@ -129,7 +131,7 @@ public final class EnvUtils {
                 }
             }
             aData.close();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new EnvironmentException("Problems reading response stream: "
                     + e.getMessage(), e);
         }
