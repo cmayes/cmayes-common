@@ -2,7 +2,6 @@ package com.cmayes.common.file;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -13,7 +12,7 @@ import java.util.List;
 import org.junit.Test;
 
 /**
- * Test different extension filters.
+ * Test different extension filters for {@link ExtensionFilter}.
  * 
  * @author cmayes
  */
