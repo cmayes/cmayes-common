@@ -13,7 +13,8 @@ public enum MediaType {
     TEXT("text/plain", "Plain text", Arrays.asList("txt")), LOG("text/plain",
             "Log file", Arrays.asList("log")), OUT("text/plain", "Output file",
             Arrays.asList("out")), CSV("text/csv", "Comma-separated values",
-            Arrays.asList("csv"));
+            Arrays.asList("csv")), JSON("application/json", "JSON", Arrays
+            .asList("json", "jsn"));
 
     private final String mimeType;
     private final String description;
