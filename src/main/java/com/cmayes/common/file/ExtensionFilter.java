@@ -56,7 +56,8 @@ public class ExtensionFilter implements FilenameFilter {
     }
 
     /**
-     * Tests if a specified file should be included in a file list.
+     * Tests if a specified file should be included in a file list. Directories
+     * always return true.
      * 
      * @param dir
      *            the directory in which the file was found.
@@ -67,6 +68,10 @@ public class ExtensionFilter implements FilenameFilter {
      * @see java.io.FilenameFilter#accept(java.io.File, java.lang.String)
      */
     public boolean accept(File dir, String name) {
+        File tgtFile = new File(dir, name);
+        if (tgtFile.isDirectory()) {
+            return true;
+        }
         return extPat.matcher(name).matches();
     }
 
