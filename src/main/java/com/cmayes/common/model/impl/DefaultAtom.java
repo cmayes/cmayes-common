@@ -1,10 +1,9 @@
 package com.cmayes.common.model.impl;
 
-import java.util.Arrays;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.cmayes.common.chem.AtomicElement;
 import com.cmayes.common.model.Atom;
@@ -130,26 +129,6 @@ public class DefaultAtom implements Atom {
      */
     public void setType(final AtomicElement atomType) {
         this.type = atomType;
-    }
-
-    /**
-     * Centers the atom by subtracting the first, second, and third elements of
-     * the array from the X, Y, and Z values of this atom.
-     * 
-     * @param xyzVals
-     *            The three-value array containing the centering values.
-     * @throws IllegalArgumentException
-     *             If the values array has fewer than three elements.
-     */
-    public void center(final double[] xyzVals) {
-        if (xyzVals.length < 3) {
-            throw new IllegalArgumentException(String.format(
-                    "XYZ vals '%s' has fewer than three elements.",
-                    Arrays.toString(xyzVals)));
-        }
-        xPos -= xyzVals[0];
-        yPos -= xyzVals[1];
-        zPos -= xyzVals[2];
     }
 
     /**

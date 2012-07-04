@@ -16,3 +16,4 @@ antlr-generator/
 *.tokens
 release.properties
 bin/
+data/

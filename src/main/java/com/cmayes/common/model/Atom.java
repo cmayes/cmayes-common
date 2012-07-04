@@ -65,14 +65,4 @@ public interface Atom {
      */
     void setType(final AtomicElement atomType);
 
-    /**
-     * Centers the atom by subtracting the first, second, and third elements of
-     * the array from the X, Y, and Z values of this atom.
-     * 
-     * @param xyzVals
-     *            The three-value array containing the centering values.
-     * @throws IllegalArgumentException
-     *             If the values array has fewer than three elements.
-     */
-    void center(final double[] xyzVals);
 }
