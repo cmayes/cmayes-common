@@ -16,7 +16,7 @@ public class AcceptAllFilter implements FilenameFilter {
      * @see java.io.FilenameFilter#accept(java.io.File, java.lang.String)
      */
     @Override
-    public boolean accept(File dir, String name) {
+    public boolean accept(final File dir, final String name) {
         return true;
     }
 }

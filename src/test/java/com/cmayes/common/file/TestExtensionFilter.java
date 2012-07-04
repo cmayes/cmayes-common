@@ -34,6 +34,9 @@ public class TestExtensionFilter {
     /** Logger. */
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
+    /**
+     * Creates an empty extdir.
+     */
     @Before
     public void setUp() {
         if (EXTDIR.exists()) {
@@ -44,6 +47,9 @@ public class TestExtensionFilter {
         }
     }
 
+    /**
+     * Deletes the extdir.
+     */
     @After
     public void tearDown() {
         if (EXTDIR.exists()) {
@@ -51,30 +57,42 @@ public class TestExtensionFilter {
         }
     }
 
+    /**
+     * Test.
+     */
     @Test
     public void testIncluded() {
-        ExtensionFilter filter = new ExtensionFilter(EXT_LIST1);
+        final ExtensionFilter filter = new ExtensionFilter(EXT_LIST1);
         assertTrue(filter.accept(null, "whatever.log"));
         assertFalse(filter.accept(null, "whateverlog"));
     }
 
+    /**
+     * Test.
+     */
     @Test
     public void testExcluded() {
-        ExtensionFilter filter = new ExtensionFilter(EXT_LIST1);
+        final ExtensionFilter filter = new ExtensionFilter(EXT_LIST1);
         assertFalse(filter.accept(null, "whatever.txt"));
     }
 
+    /**
+     * Test.
+     */
     @Test
     public void testDir() {
-        File dir = new File(EXTDIR, "testdir");
+        final File dir = new File(EXTDIR, "testdir");
         dir.mkdirs();
-        ExtensionFilter filter = new ExtensionFilter(EXT_LIST1);
+        final ExtensionFilter filter = new ExtensionFilter(EXT_LIST1);
         assertFalse(filter.accept(EXTDIR, dir.getAbsolutePath()));
     }
 
+    /**
+     * Test.
+     */
     @Test
     public void testVarargs() {
-        ExtensionFilter filter = new ExtensionFilter(OUT_EXT);
+        final ExtensionFilter filter = new ExtensionFilter(OUT_EXT);
         assertTrue(filter.accept(null, "whatever.out"));
         assertFalse(filter.accept(null, "whatever.log"));
         assertThat(filter.getExtList().size(), equalTo(1));

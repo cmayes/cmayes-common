@@ -28,15 +28,15 @@ public class ExtensionFilter implements FilenameFilter {
      * Creates a file filter that selects files with the given format list. Be
      * sure to include any needed prefixes (a dot, etc.).
      * 
-     * @param format
+     * @param exts
      *            The format to filter for.
      */
-    public ExtensionFilter(Collection<String> exts) {
+    public ExtensionFilter(final Collection<String> exts) {
         this.extList = Collections.unmodifiableCollection(asNotNull(exts,
                 "Extensions are null"));
-        Collection<String> escExts = Collections2.transform(extList,
+        final Collection<String> escExts = Collections2.transform(extList,
                 new Function<String, String>() {
-                    public String apply(String input) {
+                    public String apply(final String input) {
                         return Pattern.quote(input);
                     }
                 });
@@ -48,10 +48,10 @@ public class ExtensionFilter implements FilenameFilter {
      * Creates a file filter that selects files with the given format list. Be
      * sure to include any needed prefixes (a dot, etc.).
      * 
-     * @param format
+     * @param exts
      *            The format to filter for.
      */
-    public ExtensionFilter(String... exts) {
+    public ExtensionFilter(final String... exts) {
         this(Arrays.asList(exts));
     }
 
@@ -67,8 +67,8 @@ public class ExtensionFilter implements FilenameFilter {
      *         the file list; <code>false</code> otherwise.
      * @see java.io.FilenameFilter#accept(java.io.File, java.lang.String)
      */
-    public boolean accept(File dir, String name) {
-        File tgtFile = new File(dir, name);
+    public boolean accept(final File dir, final String name) {
+        final File tgtFile = new File(dir, name);
         if (tgtFile.isDirectory()) {
             return true;
         }

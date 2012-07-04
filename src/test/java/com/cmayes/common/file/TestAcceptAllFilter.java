@@ -14,11 +14,17 @@ import org.junit.Test;
 public class TestAcceptAllFilter {
     private static final FilenameFilter FILTER = new AcceptAllFilter();
 
+    /**
+     * Test.
+     */
     @Test
     public void testString() {
         assertTrue(FILTER.accept(null, "something"));
     }
 
+    /**
+     * Test.
+     */
     @Test
     public void testNull() {
         assertTrue(FILTER.accept(null, null));
