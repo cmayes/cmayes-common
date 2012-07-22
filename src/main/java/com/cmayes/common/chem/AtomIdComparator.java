@@ -17,6 +17,9 @@ public class AtomIdComparator implements Comparator<Atom> {
      */
     @Override
     public int compare(final Atom o1, final Atom o2) {
-        return Integer.compare(o1.getId(), o2.getId());
+        // Integer.compare from JDK 7
+        final int x = o1.getId();
+        final int y = o2.getId();
+        return (x < y) ? -1 : ((x == y) ? 0 : 1);
     }
 }

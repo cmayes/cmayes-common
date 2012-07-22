@@ -140,10 +140,10 @@ public class DefaultAtom implements Atom {
             return false;
         }
         final DefaultAtom rhs = (DefaultAtom) object;
-        return new EqualsBuilder().appendSuper(super.equals(object))
-                .append(this.id, rhs.id).append(this.yPos, rhs.yPos)
-                .append(this.xPos, rhs.xPos).append(this.zPos, rhs.zPos)
-                .append(this.type, rhs.type).isEquals();
+        return new EqualsBuilder().append(this.id, rhs.id)
+                .append(this.yPos, rhs.yPos).append(this.xPos, rhs.xPos)
+                .append(this.zPos, rhs.zPos).append(this.type, rhs.type)
+                .isEquals();
     }
 
     /**
@@ -152,8 +152,7 @@ public class DefaultAtom implements Atom {
      * @see java.lang.Object#hashCode()
      */
     public int hashCode() {
-        return new HashCodeBuilder(1651062229, 1240753677)
-                .appendSuper(super.hashCode()).append(this.id)
+        return new HashCodeBuilder(1651062229, 1240753677).append(this.id)
                 .append(this.yPos).append(this.xPos).append(this.zPos)
                 .append(this.type).toHashCode();
     }
