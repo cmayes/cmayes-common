@@ -1,6 +1,5 @@
 package com.cmayes.common.model.impl;
 
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -166,7 +165,7 @@ public class DefaultAtom implements Atom {
      */
     public String toString() {
         return new ToStringBuilder(this).append("type", this.type)
-                .append("yPos", this.yPos).append("xPos", this.xPos)
+                .append("xPos", this.xPos).append("yPos", this.yPos)
                 .append("zPos", this.zPos).append("id", this.id).toString();
     }
 }
