@@ -44,4 +44,21 @@ public final class ChemUtils {
         return vectorForAtom(first).distance(vectorForAtom(second)) <= BOND_LEN;
     }
 
+    /**
+     * Converts phi in theta in degrees to an XYZ coordinate vector.
+     * 
+     * @param phi
+     *            Phi in degrees.
+     * @param theta
+     *            Theta in degrees.
+     * @return An XYZ coordinate vector for phi and theta.
+     */
+    public static Vector3D phiThetaToVector(final double phi, final double theta) {
+        final double phiRad = Math.toRadians(phi);
+        final double thetaRad = Math.toRadians(theta);
+        final double x = Math.cos(phiRad) * Math.sin(thetaRad);
+        final double y = Math.sin(phiRad) * Math.sin(thetaRad);
+        final double z = Math.cos(thetaRad);
+        return new Vector3D(x, y, z);
+    }
 }
