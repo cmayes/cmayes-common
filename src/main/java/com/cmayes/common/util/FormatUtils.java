@@ -14,7 +14,6 @@ public final class FormatUtils {
     /** Logger. */
     private static final Logger LOGGER = LoggerFactory
             .getLogger(FormatUtils.class);
-    private String value;
 
     /**
      * Private utility constructor.

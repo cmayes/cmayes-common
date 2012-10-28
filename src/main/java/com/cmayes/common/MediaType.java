@@ -14,7 +14,8 @@ public enum MediaType {
             "Log file", Arrays.asList("log")), OUT("text/plain", "Output file",
             Arrays.asList("out")), CSV("text/csv", "Comma-separated values",
             Arrays.asList("csv")), JSON("application/json", "JSON", Arrays
-            .asList("json", "jsn"));
+            .asList("json", "jsn")), RDBMS("application/x-sql",
+            "Relational database", Arrays.asList("sql"));
 
     private final String mimeType;
     private final String description;
