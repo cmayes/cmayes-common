@@ -1,11 +1,12 @@
 package com.cmayes.common.exception;
 
 /**
- * The base class for environment issues.
+ * Extension of {@link IllegalArgumentException} that adds String.format
+ * parameters.
  * 
  * @author cmayes
  */
-public class EnvironmentException extends RuntimeException {
+public class ParamIllegalArgumentException extends IllegalArgumentException {
 
     /** UID. */
     private static final long serialVersionUID = 9020255807735636968L;
@@ -13,7 +14,7 @@ public class EnvironmentException extends RuntimeException {
     /**
      * Zero-arg constructor.
      */
-    public EnvironmentException() {
+    public ParamIllegalArgumentException() {
         super();
     }
 
@@ -25,8 +26,8 @@ public class EnvironmentException extends RuntimeException {
      * @param vals
      *            Values to use when formatting the error message.
      */
-    public EnvironmentException(final String message, final Throwable cause,
-            final Object... vals) {
+    public ParamIllegalArgumentException(final String message,
+            final Throwable cause, final Object... vals) {
         super(String.format(message, vals), cause);
     }
 
@@ -36,7 +37,8 @@ public class EnvironmentException extends RuntimeException {
      * @param vals
      *            Values to use when formatting the error message.
      */
-    public EnvironmentException(final String message, final Object... vals) {
+    public ParamIllegalArgumentException(final String message,
+            final Object... vals) {
         super(String.format(message, vals));
     }
 
@@ -44,7 +46,7 @@ public class EnvironmentException extends RuntimeException {
      * @param cause
      *            The wrapped exception.
      */
-    public EnvironmentException(final Throwable cause) {
+    public ParamIllegalArgumentException(final Throwable cause) {
         super(cause);
     }
 }

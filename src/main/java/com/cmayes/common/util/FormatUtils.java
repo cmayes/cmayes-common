@@ -1,5 +1,7 @@
 package com.cmayes.common.util;
 
+import java.util.Collection;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,5 +62,20 @@ public final class FormatUtils {
             LOGGER.error(errMsg, e);
             throw new IllegalArgumentException(errMsg, e);
         }
+    }
+
+    /**
+     * Converts the given collection of Doubles to an array of Doubles. Returns
+     * an empty array for null collections.
+     * 
+     * @param doubleColl
+     *            The collection to convert.
+     * @return An array filled with the data in the given collection.
+     */
+    public static Double[] toDoubleArray(final Collection<Double> doubleColl) {
+        if (doubleColl == null) {
+            return new Double[0];
+        }
+        return doubleColl.toArray(new Double[doubleColl.size()]);
     }
 }

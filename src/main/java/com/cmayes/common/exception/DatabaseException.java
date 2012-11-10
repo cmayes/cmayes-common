@@ -21,17 +21,22 @@ public class DatabaseException extends EnvironmentException {
      *            The exception message.
      * @param cause
      *            The wrapped exception.
+     * @param vals
+     *            Values to use when formatting the error message.
      */
-    public DatabaseException(final String message, final Throwable cause) {
-        super(message, cause);
+    public DatabaseException(final String message, final Throwable cause,
+            final Object... vals) {
+        super(message, cause, vals);
     }
 
     /**
      * @param message
      *            The exception message.
+     * @param vals
+     *            Values to use when formatting the error message.
      */
-    public DatabaseException(final String message) {
-        super(message);
+    public DatabaseException(final String message, final Object... vals) {
+        super(message, vals);
     }
 
     /**
