@@ -73,7 +73,7 @@ public class BeanMap<T> extends AbstractMap<String, Object> {
                     }
                 }
             }
-        } catch (IntrospectionException e) {
+        } catch (final IntrospectionException e) {
             throw new IllegalArgumentException(
                     "Problems introspecting the given bean: ", e);
         }
@@ -337,8 +337,8 @@ public class BeanMap<T> extends AbstractMap<String, Object> {
                     if (isStrict) {
                         method.invoke(bean, value);
                     } else {
-                        Object[] arguments = createWriteMethodArguments(method,
-                                value);
+                        final Object[] arguments = createWriteMethodArguments(
+                                method, value);
                         method.invoke(bean, arguments);
                     }
                     return old;
@@ -365,23 +365,25 @@ public class BeanMap<T> extends AbstractMap<String, Object> {
      *             if any other exception is raised by
      *             {@link #convertType(Class,Object)}
      */
-    protected Object[] createWriteMethodArguments(Method method, Object value)
-            throws IllegalAccessException {
+    protected Object[] createWriteMethodArguments(final Method method,
+            final Object value) throws IllegalAccessException {
         try {
-            if (value != null) {
-                Class<?>[] types = method.getParameterTypes();
+            Object localValue = value;
+            if (localValue != null) {
+                final Class<?>[] types = method.getParameterTypes();
                 if (types != null && types.length > 0) {
-                    Class<?> paramType = types[0];
-                    if (!paramType.isAssignableFrom(value.getClass())) {
-                        value = TypeUtils.convertType(paramType, value);
+                    final Class<?> paramType = types[0];
+                    if (!paramType.isAssignableFrom(localValue.getClass())) {
+                        localValue = TypeUtils.convertType(paramType,
+                                localValue);
                     }
                 }
             }
-            Object[] answer = { value };
+            final Object[] answer = { localValue };
             return answer;
-        } catch (InvocationTargetException e) {
+        } catch (final InvocationTargetException e) {
             throw new IllegalArgumentException(e.getMessage());
-        } catch (InstantiationException e) {
+        } catch (final InstantiationException e) {
             throw new IllegalArgumentException(e.getMessage());
         }
     }
@@ -390,7 +392,7 @@ public class BeanMap<T> extends AbstractMap<String, Object> {
      * Wraps the reflection code to make the checked exceptions easier to
      * handle.
      */
-    private static interface Wrapped {
+    private interface Wrapped {
         /**
          * Runs the operation.
          * 
@@ -415,7 +417,7 @@ public class BeanMap<T> extends AbstractMap<String, Object> {
         try {
             return wrapped.run();
 
-        } catch (IllegalAccessException e) {
+        } catch (final IllegalAccessException e) {
             throw new RuntimeException(e);
 
         } catch (final InvocationTargetException e) {
@@ -488,7 +490,6 @@ public class BeanMap<T> extends AbstractMap<String, Object> {
      */
     @Override
     public boolean containsKey(final Object key) {
-        // TODO Auto-generated method stub
         if (isStrict) {
             return super.containsKey(key);
         } else {
