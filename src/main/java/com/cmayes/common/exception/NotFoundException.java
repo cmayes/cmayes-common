@@ -22,17 +22,22 @@ public class NotFoundException extends RuntimeException {
      *            The exception message.
      * @param cause
      *            The wrapped exception.
+     * @param vals
+     *            Values to use when formatting the error message.
      */
-    public NotFoundException(final String message, final Throwable cause) {
-        super(message, cause);
+    public NotFoundException(final String message, final Throwable cause,
+            final Object... vals) {
+        super(String.format(message, vals), cause);
     }
 
     /**
      * @param message
      *            The exception message.
+     * @param vals
+     *            Values to use when formatting the error message.
      */
-    public NotFoundException(final String message) {
-        super(message);
+    public NotFoundException(final String message, final Object... vals) {
+        super(String.format(message, vals));
     }
 
     /**

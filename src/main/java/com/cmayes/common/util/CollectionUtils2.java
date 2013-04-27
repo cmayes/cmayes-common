@@ -16,14 +16,14 @@ import org.apache.commons.logging.LogFactory;
 
 import com.cmayes.common.exception.EnvironmentException;
 import com.cmayes.common.exception.NotFoundException;
+import com.cmayes.common.exception.TooManyException;
 
 /**
  * Collection-related utilities.
  */
 public final class CollectionUtils2 {
     /** Logger. */
-    private static final Log LOGGER = LogFactory
-            .getLog(CollectionUtils2.class);
+    private static final Log LOGGER = LogFactory.getLog(CollectionUtils2.class);
 
     /**
      * Private util constructor.
@@ -46,11 +46,18 @@ public final class CollectionUtils2 {
      * @throws IllegalArgumentException
      *             If there are conversion problems.
      */
-    public static <T> Collection<T> convertCollection(Class<T> tgtType,
-            Collection<?> origTypes) throws IllegalArgumentException {
-        Collection<T> convList = new ArrayList<T>();
+    public static <T> Collection<T> convertCollection(final Class<T> tgtType,
+            final Collection<?> origTypes) throws IllegalArgumentException {
+        final Collection<T> convList = new ArrayList<T>();
         for (Object origObject : origTypes) {
-            convList.add(TypeUtils.runtimeConvertType(tgtType, origObject));
+            try {
+                convList.add(TypeUtils.runtimeConvertType(tgtType, origObject));
+            } catch (final EnvironmentException e) {
+                final Throwable cause = e.getCause();
+                final Throwable wrapMe = cause == null ? e : cause;
+                throw new IllegalArgumentException(
+                        "Problems converting value %s", wrapMe);
+            }
         }
         return convList;
     }
@@ -83,11 +90,15 @@ public final class CollectionUtils2 {
      * @throws IllegalArgumentException
      *             If the collection's size is not 1.
      */
-    public static <T> T getSingle(Collection<T> collection) {
-        if (asNotNull(collection, "Null collection").size() != 1) {
-            throw new NotFoundException("Expected one element, got "
+    public static <T> T getSingle(final Collection<T> collection) {
+        if (asNotNull(collection, "Null collection").isEmpty()) {
+            throw new NotFoundException("No elements in collection");
+        }
+        if (collection.size() > 1) {
+            throw new TooManyException("Expected one element, got "
                     + collection.size());
         }
+
         if (collection instanceof List<?>) {
             return ((List<T>) collection).get(0);
         }
@@ -105,7 +116,7 @@ public final class CollectionUtils2 {
      * @throws IllegalArgumentException
      *             If the collection is empty.
      */
-    public static <T> T getFirst(Collection<T> collection) {
+    public static <T> T getFirst(final Collection<T> collection) {
         if ((asNotNull(collection, "Null collection").size() < 1)) {
             throw new NotFoundException("Empty collection");
         }
@@ -118,37 +129,13 @@ public final class CollectionUtils2 {
     /**
      * Creates a list of the given type for the given elements.
      * 
-     * @param tgtClass
-     *            The target class.
      * @param <T>
      *            The type of the elements and the list.
      * @param elements
      *            The elements to add to the list.
      * @return The filled list.
      */
-    @SuppressWarnings("unchecked")
-    public static <T> List<T> createTypedList(Class<T> tgtClass,
-            Object... elements) {
-        List<T> coll = new ArrayList<T>();
-        if (elements != null) {
-            for (int i = 0; i < elements.length; i++) {
-                coll.add((T) elements[i]);
-            }
-        }
-
-        return coll;
-    }
-
-    /**
-     * Creates a list of the given type for the given elements.
-     * 
-     * @param <T>
-     *            The type of the elements and the list.
-     * @param elements
-     *            The elements to add to the list.
-     * @return The filled list.
-     */
-    public static <T> Set<T> createSet(T... elements) {
+    public static <T> Set<T> createSet(final T... elements) {
         Set<T> coll = new HashSet<T>();
         if (elements != null) {
             for (int i = 0; i < elements.length; i++) {
@@ -156,33 +143,6 @@ public final class CollectionUtils2 {
             }
         }
         return coll;
-    }
-
-    /**
-     * Creates a map of the given types for the given elements.
-     * 
-     * @param <K>
-     *            The key type.
-     * @param <V>
-     *            The value type.
-     * @param keys
-     *            The map keys.
-     * @param values
-     *            The map values.
-     * @return The filled map.
-     * 
-     */
-    public static <K, V> Map<K, V> createMap(List<K> keys, List<V> values) {
-        Map<K, V> map = new HashMap<K, V>();
-        if (keys.size() != values.size()) {
-            throw new IllegalArgumentException(
-                    "The number of keys must equal the number of values.");
-        }
-        for (int i = 0; i < keys.size(); i++) {
-            map.put(keys.get(i), values.get(i));
-        }
-
-        return map;
     }
 
     /**
@@ -200,7 +160,7 @@ public final class CollectionUtils2 {
      * @return A collection of values for the given key.
      */
     public static <K, V> Collection<V> initCollectionValue(
-            Map<K, Collection<V>> collectionMap, K key) {
+            final Map<K, Collection<V>> collectionMap, final K key) {
         Collection<V> collection = collectionMap.get(key);
         if (collection == null) {
             collection = new ArrayList<V>();
@@ -225,17 +185,17 @@ public final class CollectionUtils2 {
      *            The class to instantiate.
      * @return A collection of values for the given key.
      */
-    public static <K, V> V initObjectValue(Map<K, V> objMap, K key,
-            Class<V> valClass) {
+    public static <K, V> V initObjectValue(final Map<K, V> objMap, final K key,
+            final Class<V> valClass) {
         V val = objMap.get(key);
         if (val == null) {
             try {
                 val = valClass.newInstance();
                 objMap.put(key, val);
-            } catch (InstantiationException e) {
+            } catch (final InstantiationException e) {
                 throw new EnvironmentException(
                         "Instantiation exception for class " + valClass, e);
-            } catch (IllegalAccessException e) {
+            } catch (final IllegalAccessException e) {
                 throw new EnvironmentException(
                         "Illegal access exception for class " + valClass, e);
             }
@@ -259,8 +219,8 @@ public final class CollectionUtils2 {
      *            The index key to fetch.
      * @return A collection of values for the given key.
      */
-    public static <I, K, V> Map<K, V> initMapValue(Map<I, Map<K, V>> mapMap,
-            I idxKey) {
+    public static <I, K, V> Map<K, V> initMapValue(
+            final Map<I, Map<K, V>> mapMap, final I idxKey) {
         Map<K, V> indexedMap = mapMap.get(idxKey);
         if (indexedMap == null) {
             indexedMap = new HashMap<K, V>();
@@ -283,7 +243,8 @@ public final class CollectionUtils2 {
      *            The key to fetch.
      * @return A set of values for the given key.
      */
-    public static <K, V> Set<V> initSetValue(Map<K, Set<V>> setMap, K key) {
+    public static <K, V> Set<V> initSetValue(final Map<K, Set<V>> setMap,
+            final K key) {
         Set<V> set = setMap.get(key);
         if (set == null) {
             set = new HashSet<V>();
@@ -306,7 +267,8 @@ public final class CollectionUtils2 {
      *            The key to fetch.
      * @return A list of values for the given key.
      */
-    public static <K, V> List<V> initListValue(Map<K, List<V>> listMap, K key) {
+    public static <K, V> List<V> initListValue(final Map<K, List<V>> listMap,
+            final K key) {
         List<V> list = listMap.get(key);
         if (list == null) {
             list = new ArrayList<V>();
@@ -331,14 +293,15 @@ public final class CollectionUtils2 {
      *             If the return type of the method is not the one specified.
      */
     @SuppressWarnings("unchecked")
-    public static <T> Collection<T> collectBeanValues(Collection<?> sources,
-            String fieldName, Class<T> fieldReturnType) {
+    public static <T> Collection<T> collectBeanValues(
+            final Collection<?> sources, final String fieldName,
+            final Class<T> fieldReturnType) {
         Collection<T> values = new ArrayList<T>();
         if (sources == null) {
             return values;
         }
         for (Object object : sources) {
-            BeanMap<Object> bean = new BeanMap<Object>(object);
+            final BeanMap<Object> bean = new BeanMap<Object>(object);
             values.add((T) bean.get(fieldName));
         }
         return values;
@@ -358,11 +321,12 @@ public final class CollectionUtils2 {
      *            The value to check for.
      * @return All beans that do not have the given value.
      */
-    public static <T> Collection<T> removeByBeanValue(Collection<T> sources,
-            String fieldName, Object value) {
-        Collection<T> retainedValues = new ArrayList<T>();
+    public static <T> Collection<T> removeByBeanValue(
+            final Collection<T> sources, final String fieldName,
+            final Object value) {
+        final Collection<T> retainedValues = new ArrayList<T>();
         for (T candidate : sources) {
-            BeanMap<T> bean = new BeanMap<T>(candidate);
+            final BeanMap<T> bean = new BeanMap<T>(candidate);
             if (bean.get(fieldName) == null) {
                 retainedValues.add(candidate);
             } else if (!bean.get(fieldName).equals(value)) {
@@ -386,11 +350,12 @@ public final class CollectionUtils2 {
      *            The value to check for.
      * @return All beans that have the given value.
      */
-    public static <T> Collection<T> retainByBeanValue(Collection<T> sources,
-            String fieldName, Object value) {
-        Collection<T> retainedValues = new ArrayList<T>();
+    public static <T> Collection<T> retainByBeanValue(
+            final Collection<T> sources, final String fieldName,
+            final Object value) {
+        final Collection<T> retainedValues = new ArrayList<T>();
         for (T candidate : sources) {
-            BeanMap<T> bean = new BeanMap<T>(candidate);
+            final BeanMap<T> bean = new BeanMap<T>(candidate);
             if ((bean.get(fieldName) != null)
                     && (bean.get(fieldName).equals(value))) {
                 retainedValues.add(candidate);
@@ -414,11 +379,12 @@ public final class CollectionUtils2 {
      * @return All beans that do not have any of the given values.
      */
     public static <T> Collection<T> removeByBeanValueInCollection(
-            Collection<T> sources, String fieldName, Collection<?> values) {
-        Collection<T> retainedValues = new ArrayList<T>();
+            final Collection<T> sources, final String fieldName,
+            final Collection<?> values) {
+        final Collection<T> retainedValues = new ArrayList<T>();
         for (T candidate : sources) {
-            BeanMap<T> bean = new BeanMap<T>(candidate);
-            Object beanVal = bean.get(fieldName);
+            final BeanMap<T> bean = new BeanMap<T>(candidate);
+            final Object beanVal = bean.get(fieldName);
             LOGGER.debug("Bean val: " + beanVal);
             LOGGER.debug("values: " + values);
             if (!values.contains(beanVal)) {
@@ -444,11 +410,12 @@ public final class CollectionUtils2 {
      * @return All beans that have any of the given values.
      */
     public static <T> Collection<T> retainByBeanValueInCollection(
-            Collection<T> sources, String fieldName, Collection<?> values) {
-        Collection<T> retainedValues = new ArrayList<T>();
+            final Collection<T> sources, final String fieldName,
+            final Collection<?> values) {
+        final Collection<T> retainedValues = new ArrayList<T>();
         for (T candidate : sources) {
-            BeanMap<T> bean = new BeanMap<T>(candidate);
-            Object beanVal = bean.get(fieldName);
+            final BeanMap<T> bean = new BeanMap<T>(candidate);
+            final Object beanVal = bean.get(fieldName);
             if (values.contains(beanVal)) {
                 retainedValues.add(candidate);
             }
@@ -472,8 +439,9 @@ public final class CollectionUtils2 {
      * @return The given values mapped by the unique return value of the
      *         requested field.
      */
-    public static <K, V> Map<K, V> mapByUniqueValue(Collection<V> sources,
-            String fieldName, Class<K> fieldReturnType) {
+    public static <K, V> Map<K, V> mapByUniqueValue(
+            final Collection<V> sources, final String fieldName,
+            final Class<K> fieldReturnType) {
         return mapByUniqueValue(sources, fieldName, fieldReturnType, false);
     }
 
@@ -497,12 +465,13 @@ public final class CollectionUtils2 {
      *         requested field.
      */
     @SuppressWarnings("unchecked")
-    public static <K, V> Map<K, V> mapByUniqueValue(Collection<V> sources,
-            String fieldName, Class<K> fieldReturnType, boolean allowDupes) {
-        Map<K, V> valMap = new HashMap<K, V>();
+    public static <K, V> Map<K, V> mapByUniqueValue(
+            final Collection<V> sources, final String fieldName,
+            final Class<K> fieldReturnType, final boolean allowDupes) {
+        final Map<K, V> valMap = new HashMap<K, V>();
         for (V curBean : sources) {
-            BeanMap<V> beanMap = new BeanMap<V>(curBean);
-            V result = valMap.put((K) beanMap.get(fieldName), curBean);
+            final BeanMap<V> beanMap = new BeanMap<V>(curBean);
+            final V result = valMap.put((K) beanMap.get(fieldName), curBean);
             if ((result != null) && !allowDupes) {
                 throw new IllegalArgumentException("Duplicate value for field "
                         + fieldName + ", value " + beanMap.get(fieldName));
@@ -530,38 +499,17 @@ public final class CollectionUtils2 {
      *         requested field.
      */
     @SuppressWarnings("unchecked")
-    public static <K, V> Map<K, List<V>> mapByValue(Collection<V> sources,
-            String fieldName, Class<K> fieldReturnType) {
-        Map<K, List<V>> valMap = new HashMap<K, List<V>>();
+    public static <K, V> Map<K, List<V>> mapByValue(
+            final Collection<V> sources, final String fieldName,
+            final Class<K> fieldReturnType) {
+        final Map<K, List<V>> valMap = new HashMap<K, List<V>>();
         for (V curBean : sources) {
-            BeanMap<V> beanMap = new BeanMap<V>(curBean);
-            K fieldVal = (K) beanMap.get(fieldName);
-            List<V> valList = initListValue(valMap, fieldVal);
+            final BeanMap<V> beanMap = new BeanMap<V>(curBean);
+            final K fieldVal = (K) beanMap.get(fieldName);
+            final List<V> valList = initListValue(valMap, fieldVal);
             valList.add(curBean);
         }
         return valMap;
-    }
-
-    /**
-     * Returns a set containing the objects passed.
-     * <p>
-     * If multiple equal objects are passed as input, no guarantee is made
-     * regarding which one will be present in the returned set.
-     * 
-     * From http://www.qrmedia.com/demo/classutils/
-     * 
-     * @param <U>
-     *            The set type.
-     * @param objects
-     *            the objects to be included in the set
-     * @return a set containing the given objects
-     */
-    public static <U> Set<U> asSet(U... objects) {
-        if (objects != null) {
-            return new HashSet<U>(Arrays.asList(objects));
-        } else {
-            return new HashSet<U>();
-        }
     }
 
     /**
@@ -573,8 +521,8 @@ public final class CollectionUtils2 {
      * @return The the lower-case names of the enumerations in the given enum
      *         array.
      */
-    public static List<String> extractEnumNames(Enum<?>[] extractMe) {
-        ArrayList<String> names = new ArrayList<String>();
+    public static List<String> extractEnumNames(final Enum<?>[] extractMe) {
+        final ArrayList<String> names = new ArrayList<String>();
         for (Enum<?> enum1 : extractMe) {
             names.add(enum1.name().toLowerCase());
         }

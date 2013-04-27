@@ -8,11 +8,11 @@
 package com.cmayes.common.exception;
 
 /**
- * Thrown when user-supplied data is invalid.
+ * Thrown when there are too many elements found.
  * 
  * @author cmayes
  */
-public class InvalidDataException extends IllegalArgumentException {
+public class TooManyException extends IllegalArgumentException {
     // ////////////////
     // Constructors //
     // ////////////////
@@ -28,7 +28,7 @@ public class InvalidDataException extends IllegalArgumentException {
      * @param vals
      *            Values to use when formatting the error message.
      */
-    public InvalidDataException(final String message, final Throwable cause,
+    public TooManyException(final String message, final Throwable cause,
             final Object... vals) {
         super(String.format(message, vals), cause);
     }
@@ -39,7 +39,7 @@ public class InvalidDataException extends IllegalArgumentException {
      * @param vals
      *            Values to use when formatting the error message.
      */
-    public InvalidDataException(final String message, final Object... vals) {
+    public TooManyException(final String message, final Object... vals) {
         super(String.format(message, vals));
     }
 
@@ -47,7 +47,7 @@ public class InvalidDataException extends IllegalArgumentException {
      * @param cause
      *            The wrapped exception.
      */
-    public InvalidDataException(final Throwable cause) {
+    public TooManyException(final Throwable cause) {
         super(cause);
     }
 }
