@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import org.apache.commons.math3.util.FastMath;
 
 import com.cmayes.common.chem.AtomicElement;
 import com.cmayes.common.exception.NotFoundException;
@@ -69,14 +70,13 @@ public final class ChemUtils {
     }
 
     /**
-     * Finds the distance between the given carbon and the otherAtoms group of
-     * the given type that has a bond with it the carbon.
+     * Finds the distance between the given atom and the otherAtoms group of the
+     * given type that has a bond with it the atom.
      * 
      * @param curCarb
-     *            The carb to check.
+     *            The atom to check.
      * @param otherAtoms
-     *            The list of atoms containing candidate elements (and a
-     *            carbon).
+     *            The list of atoms containing candidate elements.
      * @param elemType
      *            The element type to search for.
      * @return The distance.
@@ -86,35 +86,64 @@ public final class ChemUtils {
     public static Double findBond(final Atom curCarb,
             final List<Atom> otherAtoms, final AtomicElement elemType) {
         return findDistance(curCarb,
-                findBondAtom(curCarb, otherAtoms, elemType));
+                findSingleBondAtom(curCarb, otherAtoms, elemType));
     }
 
     /**
      * Finds the atom of the given type from the given list that has a bond with
-     * the given atom.  Note that this method will return the first atom that
-     * meets the criteria; any other atoms that might meet the requirement are
-     * not considered.
+     * the given atom.
      * 
-     * @param curCarb
-     *            The carb to check.
+     * @param tgtAtom
+     *            The atom to check.
      * @param otherAtoms
-     *            The list of atoms containing candidate elements (and a
-     *            carbon).
+     *            The list of atoms containing candidate elements (and a atom).
      * @param elemType
      *            The element type to search for.
      * @return The bonded atom of the given type.
      * @throws NotFoundException
      *             When the atom of the given element isn't found.
+     * @throws TooManyException
+     *             If more than one bonded atom of the given type is found.
      */
-    public static Atom findBondAtom(final Atom curCarb,
+    public static Atom findSingleBondAtom(final Atom tgtAtom,
             final List<Atom> otherAtoms, final AtomicElement elemType) {
+        List<Atom> foundAtoms = findBondAtoms(tgtAtom, otherAtoms, elemType);
+
+        switch (foundAtoms.size()) {
+        case 0:
+            throw new NotFoundException(String.format(
+                    "No %s found for atom %s", elemType.name().toLowerCase(),
+                    tgtAtom));
+        case 1:
+            return foundAtoms.get(0);
+        default:
+            throw new TooManyException(
+                    "Found %d %s bonded atoms where one was expected for atom %s",
+                    foundAtoms.size(), elemType, tgtAtom);
+        }
+    }
+
+    /**
+     * Finds all atoms of the given type from the given list that has a bond
+     * with the given atom.
+     * 
+     * @param tgtAtom
+     *            The atom to check.
+     * @param otherAtoms
+     *            The list of atoms to check.
+     * @param elemType
+     *            The element type to search for.
+     * @return The bonded atoms of the given type.
+     */
+    public static List<Atom> findBondAtoms(final Atom tgtAtom,
+            final List<Atom> otherAtoms, final AtomicElement elemType) {
+        final List<Atom> founds = new ArrayList<Atom>();
         for (Atom atom : otherAtoms) {
-            if (hasBond(curCarb, atom) && elemType.equals(atom.getType())) {
-                return atom;
+            if (hasBond(tgtAtom, atom) && elemType.equals(atom.getType())) {
+                founds.add(atom);
             }
         }
-        throw new NotFoundException(String.format("No %s found for carbon %s",
-                elemType.name().toLowerCase(), curCarb));
+        return founds;
     }
 
     /**
@@ -180,5 +209,43 @@ public final class ChemUtils {
             }
         }
         return foundList;
+    }
+
+    /**
+     * Finds the dihedral angle in degrees for the "arm" described by the given
+     * four atoms.
+     * 
+     * Based on https://www.chemaxon.com/forum/dihedral_916-download200.java
+     * 
+     * @param atom1
+     *            The first atom.
+     * @param atom2
+     *            The second atom.
+     * @param atom3
+     *            The third atom.
+     * @param atom4
+     *            The fourth atom.
+     * @return The angle (in degrees) of the intersection of the two planes (1,
+     *         2, 3) and (2, 3, 4) described by the given atoms.
+     */
+    public static double calcDihedralAngle(final Atom atom1, final Atom atom2,
+            final Atom atom3, final Atom atom4) {
+        final Vector3D atomVec1 = vectorForAtom(atom1);
+        final Vector3D atomVec2 = vectorForAtom(atom2);
+        final Vector3D atomVec3 = vectorForAtom(atom3);
+        final Vector3D atomVec4 = vectorForAtom(atom4);
+
+        Vector3D vec2ToVec1 = atomVec1.subtract(atomVec2);
+        Vector3D vec2ToVec3 = atomVec3.subtract(atomVec2);
+        // Normalized vector: length 1 with same angle.
+        final Vector3D normVec1 = vec2ToVec1.crossProduct(vec2ToVec3);
+        Vector3D vec3ToVec2 = atomVec2.subtract(atomVec3);
+        Vector3D vec3ToVec4 = atomVec4.subtract(atomVec3);
+        final Vector3D normVec2 = vec3ToVec2.crossProduct(vec3ToVec4);
+        final double dhAngle = FastMath.toDegrees(Vector3D.angle(normVec1,
+                normVec2));
+
+        // Checks the sign of the dihedral angle.
+        return normVec1.dotProduct(atomVec4) < 0 ? -dhAngle : dhAngle;
     }
 }
