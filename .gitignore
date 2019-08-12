@@ -17,3 +17,4 @@ antlr-generator/
 release.properties
 bin/
 data/
+.idea/
