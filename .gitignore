@@ -18,3 +18,4 @@ release.properties
 bin/
 data/
 .idea/
+.gradle/
